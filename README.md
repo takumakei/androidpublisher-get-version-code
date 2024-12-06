@@ -6,6 +6,10 @@ Get latest version code from Google Play Developer API
 
 ## Install
 
+You can download pre-built binaries from [Releases](https://github.com/takumakei/androidpublisher-get-version-code/releases).
+
+Or, you can build and install using Go like below:
+
 ```
 go install github.com/takumakei/androidpublisher-get-version-code@latest
 ```
@@ -42,6 +46,10 @@ Usage of androidpublisher-get-version-code:
   -version
         print version information
 ```
+
+## Credentials
+
+See [Collect your Google credentials](https://docs.fastlane.tools/getting-started/android/setup/#collect-your-google-credentials).
 
 ## Example
 
