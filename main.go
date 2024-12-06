@@ -9,6 +9,7 @@ import (
 	"io"
 	"os"
 	"runtime/debug"
+	"strconv"
 	"strings"
 	"time"
 
@@ -142,6 +143,11 @@ func printVersion() error {
 			v.CommitDate = ""
 			v.TreeState = ""
 			v.Sum = info.Main.Sum
+		}
+	}
+	if v.CommitDate != "" {
+		if i, err := strconv.Atoi(v.CommitDate); err == nil {
+			v.CommitDate += "; " + time.Unix(int64(i), 0).Format(time.RFC3339)
 		}
 	}
 	return jsonify(os.Stdout, v)
