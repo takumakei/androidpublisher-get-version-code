@@ -1,0 +1,8 @@
+Output style selector:
+  - highest
+    The highest build number across all tracks
+  - production, beta, alpha, internal
+    Select the track
+  - response
+    The JSON of TracksListResponse
+If not given, the value will be checked from the environment variable `OUTPUT_STYLE`.
