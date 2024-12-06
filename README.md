@@ -25,6 +25,10 @@ Usage of androidpublisher-get-version-code:
         "@env:" prefix followed by an environment variable name, or the
         "@file:" prefix followed by a path to the file containing the value.
 
+  -jmespath-expr JMESPATH_EXPR
+        JMESPath expression applying to the result.
+        If not given, the value will be checked from the environment variable JMESPATH_EXPR.
+
   -output-style OUTPUT_STYLE
         Output style selector:
           - highest

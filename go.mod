@@ -4,6 +4,7 @@ go 1.23.3
 
 require (
 	github.com/goaux/stacktrace v1.0.3
+	github.com/jmespath/go-jmespath v0.4.0
 	google.golang.org/api v0.210.0
 )
 

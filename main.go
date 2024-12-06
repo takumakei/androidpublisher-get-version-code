@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/goaux/stacktrace"
+	"github.com/jmespath/go-jmespath"
 	"google.golang.org/api/androidpublisher/v3"
 	"google.golang.org/api/option"
 )
@@ -41,6 +42,9 @@ var usagePackageName string
 //go:embed usageOutputStyle.txt
 var usageOutputStyle string
 
+//go:embed usageJMESPathExpr.txt
+var usageJMESPathExpr string
+
 //go:embed usageTimeLimit.txt
 var usageTimeLimit string
 
@@ -55,17 +59,19 @@ var printers = map[string]func(*androidpublisher.TracksListResponse) error{
 }
 
 var flags struct {
-	Credentials string
-	PackageName string
-	OutputStyle string
-	TimeLimit   time.Duration
-	Version     bool
+	Credentials  string
+	PackageName  string
+	OutputStyle  string
+	JMESPathExpr string
+	TimeLimit    time.Duration
+	Version      bool
 }
 
 func run() error {
 	flag.StringVar(&flags.Credentials, "credentials", "", usageString(usageCredentials))
 	flag.StringVar(&flags.PackageName, "package-name", os.Getenv("PACKAGE_NAME"), usageString(usagePackageName))
 	flag.StringVar(&flags.OutputStyle, "output-style", os.Getenv("OUTPUT_STYLE"), usageString(usageOutputStyle))
+	flag.StringVar(&flags.JMESPathExpr, "jmespath-expr", os.Getenv("JMESPATH_EXPR"), usageString(usageJMESPathExpr))
 	flag.DurationVar(&flags.TimeLimit, "time-limit", getenvDuration("TIME_LIMIT", 30*time.Second), usageString(usageTimeLimit))
 	flag.BoolVar(&flags.Version, "version", false, "print version information")
 	flag.Parse()
@@ -208,6 +214,13 @@ func printResponse(response *androidpublisher.TracksListResponse) error {
 }
 
 func jsonify(w io.Writer, v any) error {
+	if flags.JMESPathExpr != "" {
+		if r, err := jmespath.Search(flags.JMESPathExpr, v); err != nil {
+			fmt.Fprintf(os.Stderr, "warning: %v, expr=%q\n", err, flags.JMESPathExpr)
+		} else {
+			v = r
+		}
+	}
 	j := json.NewEncoder(w)
 	j.SetEscapeHTML(false)
 	j.SetIndent("", "  ")
