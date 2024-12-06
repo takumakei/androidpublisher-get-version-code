@@ -38,6 +38,7 @@ Usage of androidpublisher-get-version-code:
           - response
             The JSON of TracksListResponse
         If not given, the value will be checked from the environment variable OUTPUT_STYLE.
+        If none is specified, `highest` is used.
 
   -package-name PACKAGE_NAME
         Package name of the app in Google Play Console. For example com.example.app
