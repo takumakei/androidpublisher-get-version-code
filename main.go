@@ -128,6 +128,7 @@ func printVersion() error {
 		Commit     string `json:"commit,omitempty"`
 		CommitDate string `json:"commit_date,omitempty"`
 		TreeState  string `json:"tree_state,omitempty"`
+		Sum        string `json:"sum,omitempty"`
 	}{
 		Version:    Version,
 		Commit:     Commit,
@@ -137,9 +138,10 @@ func printVersion() error {
 	if Version == "" {
 		if info, ok := debug.ReadBuildInfo(); ok {
 			v.Version = info.Main.Version
-			v.Commit = info.Main.Sum
+			v.Commit = ""
 			v.CommitDate = ""
 			v.TreeState = ""
+			v.Sum = info.Main.Sum
 		}
 	}
 	return jsonify(os.Stdout, v)

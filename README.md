@@ -39,6 +39,8 @@ Usage of androidpublisher-get-version-code:
         Specifies the duration for how long to wait for a response from the API call.
         If not given, the value will be checked from the environment variable TIME_LIMIT.
          (default 30s)
+  -version
+        print version information
 ```
 
 ## Example
