@@ -8,12 +8,20 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"runtime/debug"
 	"strings"
 	"time"
 
 	"github.com/goaux/stacktrace"
 	"google.golang.org/api/androidpublisher/v3"
 	"google.golang.org/api/option"
+)
+
+var (
+	Version    string
+	Commit     string
+	CommitDate string
+	TreeState  string
 )
 
 func main() {
@@ -50,6 +58,7 @@ var flags struct {
 	PackageName string
 	OutputStyle string
 	TimeLimit   time.Duration
+	Version     bool
 }
 
 func run() error {
@@ -57,7 +66,12 @@ func run() error {
 	flag.StringVar(&flags.PackageName, "package-name", os.Getenv("PACKAGE_NAME"), usageString(usagePackageName))
 	flag.StringVar(&flags.OutputStyle, "output-style", os.Getenv("OUTPUT_STYLE"), usageString(usageOutputStyle))
 	flag.DurationVar(&flags.TimeLimit, "time-limit", getenvDuration("TIME_LIMIT", 30*time.Second), usageString(usageTimeLimit))
+	flag.BoolVar(&flags.Version, "version", false, "print version information")
 	flag.Parse()
+
+	if flags.Version {
+		return printVersion()
+	}
 
 	if flags.PackageName == "" {
 		return fmt.Errorf("Package name must be specified")
@@ -106,6 +120,29 @@ func run() error {
 	}
 
 	return printer(response)
+}
+
+func printVersion() error {
+	v := &struct {
+		Version    string `json:"version,omitempty"`
+		Commit     string `json:"commit,omitempty"`
+		CommitDate string `json:"commit_date,omitempty"`
+		TreeState  string `json:"tree_state,omitempty"`
+	}{
+		Version:    Version,
+		Commit:     Commit,
+		CommitDate: CommitDate,
+		TreeState:  TreeState,
+	}
+	if Version == "" {
+		if info, ok := debug.ReadBuildInfo(); ok {
+			v.Version = info.Main.Version
+			v.Commit = info.Main.Sum
+			v.CommitDate = ""
+			v.TreeState = ""
+		}
+	}
+	return jsonify(os.Stdout, v)
 }
 
 func usageString(s string) string {
