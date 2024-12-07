@@ -8,6 +8,12 @@ Get latest version code from Google Play Developer API
 
 You can download pre-built binaries from [Releases](https://github.com/takumakei/androidpublisher-get-version-code/releases).
 
+Or, using install.sh:
+
+```
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/takumakei/androidpublisher-get-version-code/refs/heads/main/install.sh)" -- latest
+```
+
 Or, you can build and install using Go like below:
 
 ```
