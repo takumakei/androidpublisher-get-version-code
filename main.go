@@ -144,7 +144,7 @@ func printVersion() error {
 	}
 	if Version == "" {
 		if info, ok := debug.ReadBuildInfo(); ok {
-			v.Version = info.Main.Version
+			v.Version = strings.TrimPrefix(info.Main.Version, "v")
 			v.Commit = ""
 			v.CommitDate = ""
 			v.TreeState = ""
